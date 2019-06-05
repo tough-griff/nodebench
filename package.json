@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.19.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": "off"
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.spec.js"
+        ],
+        "env": {
+          "jest": "true"
+        }
+      }
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}
