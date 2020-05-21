@@ -3,7 +3,6 @@ const Benchmark = require('benchmark');
 const fs = require('fs');
 const path = require('path');
 const babel = require('./babel');
-const babelTemplates = require('./babelTemplates');
 const escodegen = require('./escodegen');
 
 const suite = new Benchmark.Suite();
@@ -20,15 +19,6 @@ suite
       throw err;
     }
   })
-  .add('babel w/ templates', () => {
-    try {
-      const result = babelTemplates(content, filename);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  })
-
   .add('escodegen', () => {
     try {
       const result = escodegen(content, filename);

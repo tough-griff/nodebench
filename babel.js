@@ -1,9 +1,12 @@
 const generate = require('@babel/generator').default;
 const { parse } = require('@babel/parser');
+const template = require('@babel/template').default;
 const traverse = require('@babel/traverse').default;
 const t = require('@babel/types');
 const _ = require('lodash');
 const { callees, specs } = require('./callees');
+
+const callBuilder = template(`%%callee%%(%%left%%, %%right%%)`);
 
 module.exports = function rewrite(content, filename) {
   const ast = parse(content, {
@@ -29,7 +32,11 @@ module.exports = function rewrite(content, filename) {
           return;
 
         path.replaceWith(
-          t.callExpression(callee, [path.node.left, path.node.right]),
+          callBuilder({
+            callee,
+            left: path.node.left,
+            right: path.node.right,
+          }),
         );
       },
     },
