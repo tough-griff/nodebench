@@ -15,17 +15,19 @@ function buildASTObjectProto(callee, args) {
   };
 }
 
-module.exports = function rewrite(content, filename) {
-  const ast = esprima.parse(content, {
+const parse = (content, filename) => {
+  return esprima.parse(content, {
     loc: true,
     range: true,
     tokens: true,
     comment: true,
     sourceType: 'script',
   });
+};
 
+const traverse = (ast) => {
   estraverse.attachComments(ast, ast.comments, ast.tokens);
-  estraverse.replace(ast, {
+  return estraverse.replace(ast, {
     enter(node) {
       if (node.type === 'BinaryExpression') {
         let rewrittenNode;
@@ -78,7 +80,9 @@ module.exports = function rewrite(content, filename) {
       return node;
     },
   });
+};
 
+const generate = (ast, content, filename) => {
   return escodegen.generate(ast, {
     sourceCode: content,
     format: {
@@ -89,3 +93,12 @@ module.exports = function rewrite(content, filename) {
     comment: true,
   });
 };
+
+module.exports = function rewrite(content, filename) {
+  const ast = parse(content, filename);
+  traverse(ast);
+  return generate(ast, content, filename);
+};
+module.exports.parse = parse;
+module.exports.traverse = traverse;
+module.exports.generate = generate;

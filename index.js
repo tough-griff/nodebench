@@ -3,12 +3,17 @@ const Benchmark = require('benchmark');
 const fs = require('fs');
 const path = require('path');
 const babel = require('./babel');
-const escodegen = require('./escodegen');
+const estools = require('./estools');
 
 const suite = new Benchmark.Suite();
 
 const filename = path.resolve(__dirname, './sample.js');
 const content = fs.readFileSync(filename).toString();
+
+const babelAst = babel.parse(content, filename);
+babel.traverse(babelAst);
+const esAst = estools.parse(content, filename);
+estools.traverse(esAst);
 
 suite
   .add('babel', () => {
@@ -19,9 +24,19 @@ suite
       throw err;
     }
   })
-  .add('escodegen', () => {
+  .add('babel (no sourcemaps)', () => {
     try {
-      const result = escodegen(content, filename);
+      const result = babel(content, filename, {
+        sourceMaps: false,
+      });
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  })
+  .add('estools', () => {
+    try {
+      const result = estools(content, filename);
     } catch (err) {
       console.error(err);
       throw err;

@@ -1,22 +1,24 @@
-const generate = require('@babel/generator').default;
-const { parse } = require('@babel/parser');
+const _generate = require('@babel/generator').default;
+const { parse: _parse } = require('@babel/parser');
 const template = require('@babel/template').default;
-const traverse = require('@babel/traverse').default;
+const _traverse = require('@babel/traverse').default;
 const t = require('@babel/types');
 const _ = require('lodash');
 const { callees, specs } = require('./callees');
 
 const callBuilder = template(`%%callee%%(%%left%%, %%right%%)`);
 
-module.exports = function rewrite(content, filename) {
-  const ast = parse(content, {
+const parse = (content, filename) => {
+  return _parse(content, {
     range: true,
     sourceFilename: filename,
     sourceType: 'script',
     tokens: true,
   });
+};
 
-  traverse(
+const traverse = (ast) => {
+  return _traverse(
     ast,
     {
       BinaryExpression(path) {
@@ -43,14 +45,26 @@ module.exports = function rewrite(content, filename) {
     null,
     {},
   );
+};
 
-  return generate(
+const generate = (ast, content, filename, opts = {}) => {
+  return _generate(
     ast,
     {
       jsonCompatibleStrings: true,
       sourceFileName: filename,
       sourceMaps: true,
+      ...opts,
     },
     content,
   );
 };
+
+module.exports = function rewrite(content, filename, opts = {}) {
+  const ast = parse(content, filename, opts);
+  traverse(ast);
+  return generate(ast, content, filename);
+};
+module.exports.parse = parse;
+module.exports.traverse = traverse;
+module.exports.generate = generate;
