@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const Benchmark = require('benchmark');
 
 const suite = new Benchmark.Suite();

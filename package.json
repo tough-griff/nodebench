@@ -5,6 +5,9 @@
     "start": "node index.js",
     "test": "node index.js"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "benchmark": "^2.1.4"
   },
@@ -19,7 +22,12 @@
     "prettier": "^2.0.5"
   },
   "eslintConfig": {
-    "extends": "@tough-griff"
+    "extends": "@tough-griff",
+    "rules": {
+      "comma-dangle": "off",
+      "no-console": "off",
+      "no-underscore-dangle": "off"
+    }
   },
   "prettier": {
     "arrowParens": "always",
