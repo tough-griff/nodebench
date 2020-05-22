@@ -14,6 +14,6 @@ suite
     console.log(event.target.toString());
   })
   .on('complete', function onComplete() {
-    console.log(`Fastest is ${this.filter('fastest').map('name')}`);
+    console.log(`Fastest is ${this.filter('fastest').map('name').join(', ')}`);
   })
   .run({ async: true });
