@@ -1,20 +1,18 @@
 /* eslint-disable no-unused-vars */
 const Benchmark = require('benchmark');
+const crypto = require('crypto');
 const fs = require('fs');
-const v8 = require('v8');
 
 const suite = new Benchmark.Suite();
 
-const obj = {
-  code: fs.readFileSync('./sample.js').toString(),
-};
+const content = fs.readFileSync('./sample.js').toString();
 
 suite
-  .add('JSON.stringify', () => {
-    JSON.stringify(obj);
+  .add('md5 sum', () => {
+    const cacheKey = crypto.createHash('md5').update(content).digest('hex');
   })
-  .add('v8.serialize', () => {
-    v8.serialize(obj);
+  .add('mtime', () => {
+    const mtime = +fs.statSync('./sample.js').mtime;
   })
   .on('cycle', function onCycle(event) {
     console.log(event.target.toString());
