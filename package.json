@@ -25,9 +25,8 @@
   "eslintConfig": {
     "extends": "@tough-griff",
     "rules": {
-      "comma-dangle": "off",
       "no-console": "off",
-      "no-underscore-dangle": "off"
+      "no-unused-vars": "off"
     }
   },
   "prettier": {
