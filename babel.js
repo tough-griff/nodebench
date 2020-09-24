@@ -47,21 +47,20 @@ const traverse = (ast) => {
   );
 };
 
-const generate = (ast, content, filename, opts = {}) => {
+const generate = (ast, content, filename) => {
   return _generate(
     ast,
     {
       jsonCompatibleStrings: true,
       sourceFileName: filename,
       sourceMaps: true,
-      ...opts,
     },
     content,
   );
 };
 
-module.exports = function rewrite(content, filename, opts = {}) {
-  const ast = parse(content, filename, opts);
+module.exports = function rewrite(content, filename) {
+  const ast = parse(content, filename);
   traverse(ast);
   return generate(ast, content, filename);
 };

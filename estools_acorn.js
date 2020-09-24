@@ -1,6 +1,6 @@
+const acorn = require('acorn');
 const escodegen = require('@contrast/escodegen');
 const estraverse = require('@contrast/estraverse');
-const esprima = require('./esprima');
 const { callees } = require('./callees');
 
 function buildASTObjectProto(callee, args) {
@@ -16,14 +16,22 @@ function buildASTObjectProto(callee, args) {
 }
 
 const parse = (content, filename) => {
-  return esprima.parse(content, {
-    loc: true,
-    range: true,
-    tokens: true,
-    comment: true,
-    source: filename,
+  const comments = [];
+  const tokens = [];
+
+  const ast = acorn.parse(content, {
+    locations: true,
+    ranges: true,
+    onComment: comments,
+    onToken: tokens,
+    sourceFile: filename,
     sourceType: 'script',
   });
+
+  ast.comments = comments;
+  ast.tokens = tokens;
+
+  return ast;
 };
 
 const traverse = (ast) => {

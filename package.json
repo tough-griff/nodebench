@@ -9,16 +9,17 @@
     "node": "12.x"
   },
   "dependencies": {
-    "@babel/generator": "^7.9.6",
-    "@babel/parser": "^7.9.6",
-    "@babel/template": "^7.8.6",
-    "@babel/traverse": "^7.9.6",
-    "@babel/types": "^7.9.6",
+    "@babel/generator": "^7.11.6",
+    "@babel/parser": "^7.11.5",
+    "@babel/template": "^7.10.4",
+    "@babel/traverse": "^7.11.5",
+    "@babel/types": "^7.11.5",
     "@contrast/escodegen": "^1.15.1",
     "@contrast/estraverse": "^5.1.0",
+    "acorn": "^8.0.1",
     "benchmark": "^2.1.4",
     "esprima": "^4.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "microtime": "^3.0.0"
   },
   "devDependencies": {
