@@ -6,14 +6,12 @@
  * Copyright(c) 2014-2015 Douglas Christopher Wilson
  * MIT Licensed
  */
-
 'use strict';
 
 /**
  * Module dependencies.
  * @private
  */
-
 var accepts = require('accepts');
 var deprecate = require('depd')('express');
 var isIP = require('net').isIP;
@@ -28,14 +26,12 @@ var proxyaddr = require('proxy-addr');
  * Request prototype.
  * @public
  */
-
 var req = Object.create(http.IncomingMessage.prototype);
 
 /**
  * Module exports.
  * @public
  */
-
 module.exports = req;
 
 /**
@@ -61,7 +57,6 @@ module.exports = req;
  * @return {String}
  * @public
  */
-
 req.get = req.header = function header(name) {
   if (!name) {
     throw new TypeError('name argument is required to req.get');
@@ -127,7 +122,6 @@ req.get = req.header = function header(name) {
  * @return {String|Array|Boolean}
  * @public
  */
-
 req.accepts = function () {
   var accept = accepts(this);
   return accept.types.apply(accept, arguments);
@@ -140,7 +134,6 @@ req.accepts = function () {
  * @return {String|Array}
  * @public
  */
-
 req.acceptsEncodings = function () {
   var accept = accepts(this);
   return accept.encodings.apply(accept, arguments);
@@ -159,7 +152,6 @@ req.acceptsEncoding = deprecate.function(
  * @return {String|Array}
  * @public
  */
-
 req.acceptsCharsets = function () {
   var accept = accepts(this);
   return accept.charsets.apply(accept, arguments);
@@ -178,7 +170,6 @@ req.acceptsCharset = deprecate.function(
  * @return {String|Array}
  * @public
  */
-
 req.acceptsLanguages = function () {
   var accept = accepts(this);
   return accept.languages.apply(accept, arguments);
@@ -213,7 +204,6 @@ req.acceptsLanguage = deprecate.function(
  * @return {number|array}
  * @public
  */
-
 req.range = function range(size, options) {
   var range = this.get('Range');
   if (!range) return;
@@ -236,7 +226,6 @@ req.range = function range(size, options) {
  * @return {String}
  * @public
  */
-
 req.param = function param(name, defaultValue) {
   var params = this.params || {};
   var body = this.body || {};
@@ -279,7 +268,6 @@ req.param = function param(name, defaultValue) {
  * @return {String|false|null}
  * @public
  */
-
 req.is = function is(types) {
   var arr = types;
 
@@ -307,7 +295,6 @@ req.is = function is(types) {
  * @return {String}
  * @public
  */
-
 defineGetter(req, 'protocol', function protocol() {
   var proto = this.connection.encrypted ? 'https' : 'http';
   var trust = this.app.get('trust proxy fn');
@@ -332,7 +319,6 @@ defineGetter(req, 'protocol', function protocol() {
  * @return {Boolean}
  * @public
  */
-
 defineGetter(req, 'secure', function secure() {
   return this.protocol === 'https';
 });
@@ -346,7 +332,6 @@ defineGetter(req, 'secure', function secure() {
  * @return {String}
  * @public
  */
-
 defineGetter(req, 'ip', function ip() {
   var trust = this.app.get('trust proxy fn');
   return proxyaddr(this, trust);
@@ -363,7 +348,6 @@ defineGetter(req, 'ip', function ip() {
  * @return {Array}
  * @public
  */
-
 defineGetter(req, 'ips', function ips() {
   var trust = this.app.get('trust proxy fn');
   var addrs = proxyaddr.all(this, trust);
@@ -389,7 +373,6 @@ defineGetter(req, 'ips', function ips() {
  * @return {Array}
  * @public
  */
-
 defineGetter(req, 'subdomains', function subdomains() {
   var hostname = this.hostname;
 
@@ -407,7 +390,6 @@ defineGetter(req, 'subdomains', function subdomains() {
  * @return {String}
  * @public
  */
-
 defineGetter(req, 'path', function path() {
   return parse(this).pathname;
 });
@@ -422,7 +404,6 @@ defineGetter(req, 'path', function path() {
  * @return {String}
  * @public
  */
-
 defineGetter(req, 'hostname', function hostname() {
   var trust = this.app.get('trust proxy fn');
   var host = this.get('X-Forwarded-Host');
@@ -458,7 +439,6 @@ defineGetter(
  * @return {Boolean}
  * @public
  */
-
 defineGetter(req, 'fresh', function () {
   var method = this.method;
   var res = this.res;
@@ -486,7 +466,6 @@ defineGetter(req, 'fresh', function () {
  * @return {Boolean}
  * @public
  */
-
 defineGetter(req, 'stale', function stale() {
   return !this.fresh;
 });
@@ -497,7 +476,6 @@ defineGetter(req, 'stale', function stale() {
  * @return {Boolean}
  * @public
  */
-
 defineGetter(req, 'xhr', function xhr() {
   var val = this.get('X-Requested-With') || '';
   return val.toLowerCase() === 'xmlhttprequest';
