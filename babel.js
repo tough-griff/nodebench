@@ -1,7 +1,7 @@
-const _generate = require('@babel/generator').default;
+const { default: _generate } = require('@babel/generator');
 const { parse: _parse } = require('@babel/parser');
-const template = require('@babel/template').default;
-const _traverse = require('@babel/traverse').default;
+const { default: template } = require('@babel/template');
+const { default: _traverse } = require('@babel/traverse');
 const t = require('@babel/types');
 const _ = require('lodash');
 const { callees, specs } = require('./callees');
