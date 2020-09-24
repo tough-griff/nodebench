@@ -97,7 +97,7 @@ const generate = (ast, content, filename) => {
   // currently doubling up comments.
   // source map is not working.
   const code = astring.generate(ast, {
-    // comments: true,
+    comments: true,
     sourceMap: map,
   });
 
