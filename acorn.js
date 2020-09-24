@@ -1,5 +1,7 @@
 const acorn = require('acorn');
-const escodegen = require('@contrast/escodegen');
+const astravel = require('astravel');
+const astring = require('astring');
+const { SourceMapGenerator } = require('source-map');
 const estraverse = require('@contrast/estraverse');
 const { callees } = require('./callees');
 
@@ -17,26 +19,23 @@ function buildASTObjectProto(callee, args) {
 
 const parse = (content, filename) => {
   const comments = [];
-  const tokens = [];
 
   const ast = acorn.parse(content, {
     ecmaVersion: 2020,
     locations: true,
     ranges: true,
     onComment: comments,
-    onToken: tokens,
     sourceFile: filename,
     sourceType: 'script',
   });
 
   ast.comments = comments;
-  ast.tokens = tokens;
 
   return ast;
 };
 
 const traverse = (ast) => {
-  estraverse.attachComments(ast, ast.comments, ast.tokens);
+  astravel.attachComments(ast, ast.comments);
   return estraverse.replace(ast, {
     enter(node) {
       if (node.type === 'BinaryExpression') {
@@ -93,17 +92,16 @@ const traverse = (ast) => {
 };
 
 const generate = (ast, content, filename) => {
-  return escodegen.generate(ast, {
-    sourceCode: content,
-    sourceMap: true,
-    sourceMapWithCode: true,
-    format: {
-      json: true,
-      compact: false,
-      preserveBlankLines: true,
-    },
-    comment: true,
+  const map = new SourceMapGenerator({ file: filename });
+
+  // currently doubling up comments.
+  // source map is not working.
+  const code = astring.generate(ast, {
+    // comments: true,
+    sourceMap: map,
   });
+
+  return { code, map };
 };
 
 module.exports = function rewrite(content, filename) {

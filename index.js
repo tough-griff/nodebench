@@ -2,6 +2,7 @@
 const Benchmark = require('benchmark');
 const fs = require('fs');
 const path = require('path');
+const acorn = require('./acorn');
 const babel = require('./babel');
 const estools = require('./estools');
 const estoolsAcorn = require('./estools_acorn');
@@ -14,6 +15,20 @@ const content = fs.readFileSync(filename).toString();
 const errHandler = (err) => {
   if (err) console.warn(err);
 };
+
+const acornRewriteResult = acorn(content, filename);
+fs.writeFile(
+  './results/acorn.result.js',
+  acornRewriteResult.code,
+  'utf8',
+  errHandler,
+);
+fs.writeFile(
+  './results/acorn.result.js.map',
+  JSON.stringify(acornRewriteResult.map),
+  'utf8',
+  errHandler,
+);
 
 const babelRewriteResult = babel(content, filename);
 fs.writeFile(
@@ -58,6 +73,15 @@ fs.writeFile(
 );
 
 suite
+  .add('acorn', () => {
+    try {
+      const result = acorn(content, filename);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  })
+
   .add('babel', () => {
     try {
       const result = babel(content, filename);
