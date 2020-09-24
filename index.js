@@ -11,24 +11,50 @@ const suite = new Benchmark.Suite();
 const filename = path.resolve(__dirname, './sample.js');
 const content = fs.readFileSync(filename).toString();
 
-const babelResult = babel(content, filename);
-const estoolsResult = estools(content, filename);
-const estoolsAcornResult = estoolsAcorn(content, filename);
+const errHandler = (err) => {
+  if (err) console.warn(err);
+};
 
-fs.writeFileSync('./results/babelResult.js', babelResult.code);
-fs.writeFileSync(
-  './results/babelResult.js.map',
-  JSON.stringify(babelResult.map),
+const babelRewriteResult = babel(content, filename);
+fs.writeFile(
+  './results/babel.result.js',
+  babelRewriteResult.code,
+  'utf8',
+  errHandler,
 );
-fs.writeFileSync('./results/estoolsResult.js', estoolsResult.code);
-fs.writeFileSync(
-  './results/estoolsResult.js.map',
-  JSON.stringify(estoolsResult.map),
+fs.writeFile(
+  './results/babel.result.js.map',
+  JSON.stringify(babelRewriteResult.map),
+  'utf8',
+  errHandler,
 );
-fs.writeFileSync('./results/estoolsAcornResult.js', estoolsAcornResult.code);
-fs.writeFileSync(
-  './results/estoolsAcornResult.js.map',
-  JSON.stringify(estoolsAcornResult.map),
+
+const esToolsRewriteResult = estools(content, filename);
+fs.writeFile(
+  './results/estools.result.js',
+  esToolsRewriteResult.code,
+  'utf8',
+  errHandler,
+);
+fs.writeFile(
+  './results/estools.result.js.map',
+  JSON.stringify(esToolsRewriteResult.map),
+  'utf8',
+  errHandler,
+);
+
+const estoolsAcornRewriteResult = estoolsAcorn(content, filename);
+fs.writeFile(
+  './results/estoolsAcorn.result.js',
+  estoolsAcornRewriteResult.code,
+  'utf8',
+  errHandler,
+);
+fs.writeFile(
+  './results/estoolsAcorn.result.js.map',
+  JSON.stringify(estoolsAcornRewriteResult.map),
+  'utf8',
+  errHandler,
 );
 
 suite
