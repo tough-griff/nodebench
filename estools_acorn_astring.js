@@ -1,6 +1,6 @@
 const acorn = require('acorn');
-const astravel = require('astravel');
 const astring = require('astring');
+const estraverse = require('@contrast/estraverse');
 const { SourceMapGenerator } = require('source-map');
 const { callees } = require('./callees');
 
@@ -18,32 +18,34 @@ function buildASTObjectProto(callee, args) {
 
 const parse = (content, filename) => {
   const comments = [];
+  const tokens = [];
 
   const ast = acorn.parse(content, {
     ecmaVersion: 2020,
     locations: true,
     ranges: true,
     onComment: comments,
+    onToken: tokens,
     sourceFile: filename,
     sourceType: 'script',
   });
 
   ast.comments = comments;
+  ast.tokens = tokens;
 
   return ast;
 };
 
 const traverse = (ast) => {
-  astravel.attachComments(ast, ast.comments);
-
-  // note: this does not work at all.
-  const traveler = astravel.makeTraveler({
-    go(node, state) {
+  estraverse.attachComments(ast, ast.comments, ast.tokens);
+  return estraverse.replace(ast, {
+    enter(node) {
       if (node.type === 'BinaryExpression') {
+        let rewrittenNode;
         switch (node.operator) {
           case '+': {
             if (node.left.type !== 'Literal' || node.right.type !== 'Literal') {
-              node = buildASTObjectProto(callees.__add, [
+              rewrittenNode = buildASTObjectProto(callees.__add, [
                 node.left,
                 node.right,
               ]);
@@ -51,53 +53,51 @@ const traverse = (ast) => {
             break;
           }
           case '==': {
-            node = buildASTObjectProto(callees.__doubleEqual, [
+            rewrittenNode = buildASTObjectProto(callees.__doubleEqual, [
               node.left,
               node.right,
             ]);
             break;
           }
           case '!=': {
-            node = buildASTObjectProto(callees.__notDoubleEqual, [
+            rewrittenNode = buildASTObjectProto(callees.__notDoubleEqual, [
               node.left,
               node.right,
             ]);
             break;
           }
           case '===': {
-            node = buildASTObjectProto(callees.__tripleEqual, [
+            rewrittenNode = buildASTObjectProto(callees.__tripleEqual, [
               node.left,
               node.right,
             ]);
             break;
           }
           case '!==': {
-            node = buildASTObjectProto(callees.__notTripleEqual, [
+            rewrittenNode = buildASTObjectProto(callees.__notTripleEqual, [
               node.left,
               node.right,
             ]);
             break;
           }
           default: {
-            break;
+            rewrittenNode = node;
           }
         }
+
+        return rewrittenNode;
       }
-      this.super.go.call(this, node, state);
+
+      return node;
     },
   });
-
-  traveler.go(ast, {});
-
-  return ast;
 };
 
 const generate = (ast, content, filename) => {
   const map = new SourceMapGenerator({ file: filename });
 
-  // note: doubles up comments.
+  // note: comments are not associated correctly.
   // note: source map seems useless.
-  // note: doesn't generate transformed code.
   const code = astring.generate(ast, {
     comments: true,
     sourceMap: map,
