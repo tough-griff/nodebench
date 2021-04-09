@@ -1,13 +1,20 @@
 const Benchmark = require('benchmark');
+const path = require('path');
 
 const suite = new Benchmark.Suite();
 
+const dir = '/path/to/@contrast/agent';
+const str = '/path/to/@contrast/agent/lib/file.js';
+
 suite
-  .add('A', () => {
-    const str = 'B';
+  .add('.includes()', () => {
+    return str.includes(dir);
   })
-  .add('B', () => {
-    const str = 'B';
+  .add('.startsWith()', () => {
+    return str.startsWith(dir);
+  })
+  .add('.indexOf()', () => {
+    return str.indexOf(dir) >= 0;
   })
   .on('cycle', function onCycle(event) {
     console.log(event.target.toString());
