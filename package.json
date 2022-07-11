@@ -3,14 +3,17 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "node index.js"
+    "start": "npm test",
+    "pretest": "rm results.txt",
+    "test": "node index.js > results.txt",
+    "posttest": "cat results.txt"
   },
   "engines": {
     "node": ">=12"
   },
   "dependencies": {
     "benchmark": "^2.1.4",
+    "lodash": "^4.17.21",
     "microtime": "^3.0.0"
   },
   "devDependencies": {
