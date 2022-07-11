@@ -14,14 +14,7 @@
     "microtime": "^3.0.0"
   },
   "devDependencies": {
-    "@tough-griff/eslint-config": "^1.1.8",
-    "eslint": "^7.22.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^2.2.1"
+    "@tough-griff/eslint-config": "^2.0.0"
   },
   "eslintConfig": {
     "extends": "@tough-griff",
@@ -29,10 +22,5 @@
       "no-console": "off",
       "no-unused-vars": "off"
     }
-  },
-  "prettier": {
-    "arrowParens": "always",
-    "singleQuote": true,
-    "trailingComma": "all"
   }
 }

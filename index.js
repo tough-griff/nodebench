@@ -4,7 +4,7 @@ const suite = new Benchmark.Suite();
 
 suite
   .add('A', () => {
-    const str = 'B';
+    const str = 'A';
   })
   .add('B', () => {
     const str = 'B';
