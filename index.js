@@ -1,17 +1,18 @@
-const bench = require('fastbench');
+const Benchmark = require('benchmark');
 
-const run = bench(
-  [
-    function A(done) {
-      const str = 'A';
-      setImmediate(done);
-    },
-    function B(done) {
-      const str = 'B';
-      setImmediate(done);
-    },
-  ],
-  10000,
-);
+const suite = new Benchmark.Suite();
 
-run();
+suite
+  .add('A', () => {
+    const str = 'A';
+  })
+  .add('B', () => {
+    const str = 'B';
+  })
+  .on('cycle', function onCycle(event) {
+    console.log(event.target.toString());
+  })
+  .on('complete', function onComplete() {
+    console.log(`Fastest is ${this.filter('fastest').map('name').join(', ')}`);
+  })
+  .run({ async: true });
