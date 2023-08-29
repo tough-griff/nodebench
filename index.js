@@ -1,4 +1,8 @@
+/* eslint-disable prettier/prettier */
+// @ts-check
 const Benchmark = require('benchmark');
+
+Benchmark.options.minSamples = 100;
 
 const suite = new Benchmark.Suite();
 
