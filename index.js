@@ -1,5 +1,6 @@
-/* eslint-disable prettier/prettier */
 // @ts-check
+'use strict';
+
 const Benchmark = require('benchmark');
 
 Benchmark.options.minSamples = 100;
